@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Users } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +16,7 @@ export class UsersService {
     return 'Successfully created user';
   }
 
-  async edit(editUser: Users) {
+  async edit(editUser: UpdateUserDto) {
     const userIndex = this.userModel.findIndex(
       (user) => user.username == editUser.username,
     );

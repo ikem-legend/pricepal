@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -25,7 +26,10 @@ export class UsersController {
   }
 
   @Patch(':id')
-  async edit(@Param('id') id: string, @Body() editUser): Promise<string> {
+  async edit(
+    @Param('id') id: string,
+    @Body() editUser: UpdateUserDto,
+  ): Promise<string> {
     return this.userService.edit(editUser);
   }
 
