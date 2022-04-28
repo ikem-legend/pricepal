@@ -8,6 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +20,7 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() body): Promise<string> {
+  async create(@Body() body: CreateUserDto): Promise<string> {
     return this.userService.create(body);
   }
 
