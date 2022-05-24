@@ -1,31 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { Users } from './entities/user.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly userModel = [];
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+  ) {}
 
-  async findAll(): Promise<Users[]> {
-    return this.userModel;
+  findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
+
+  async findOne(id: string): Promise<User> {
+    const user = this.usersRepository.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
   async create(user: CreateUserDto) {
-    this.userModel.push(user);
+    const newUser = await this.usersRepository.create(user);
+    await this.usersRepository.save(newUser);
     return 'Successfully created user';
   }
 
-  async edit(editUser: UpdateUserDto) {
-    const userIndex = this.userModel.findIndex(
-      (user) => user.username == editUser.username,
-    );
-    this.userModel.splice(userIndex, 1, editUser);
+  async edit(id: string, editUser: UpdateUserDto) {
+    const user = await this.usersRepository.preload({
+      id: +id,
+      ...editUser,
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.usersRepository.save(user);
     return 'Successfully edited user';
   }
 
   async delete(id: string) {
-    this.userModel.filter((user) => user.username !== id);
+    const user = await this.findOne(id);
+    await this.usersRepository.remove(user);
     return 'Successfully deleted user';
   }
 }

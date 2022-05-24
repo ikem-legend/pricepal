@@ -37,7 +37,9 @@ export class CreateUserDto {
   readonly lastName: string;
 
   @IsString()
-  @IsAlpha()
+  @Matches(/^[a-zA-Z]{3,}.*/, {
+    message: 'Username must start with at least 3 alphabetic characters',
+  })
   @MinLength(3, {
     message:
       'Username is too short. Minimum length is $constraint1 characters, but actual length is $value',
@@ -48,7 +50,7 @@ export class CreateUserDto {
   })
   readonly username: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('NG')
   @MinLength(11, {
     message: 'Phone number is too short',
   })
