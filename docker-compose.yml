@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   db:
+    container_name: pricepal_db
     image: postgres:14.2-alpine
     restart: always
     env_file:
@@ -12,8 +13,8 @@ services:
 
   pgadmin:
     links:
-      - db:postgres
-    container_name: pgadmin
+      - db
+    container_name: pricepal_pgadmin
     image: dpage/pgadmin4
     ports:
       - "8080:80"
@@ -21,13 +22,6 @@ services:
       - /data/pgadmin:/root/.pgadmin
     env_file:
       - .env.development
-    networks:
-      - db
-
-# Review networks and volumes
-networks:
-  db:
-    driver: bridge
 
 volumes:
   db:

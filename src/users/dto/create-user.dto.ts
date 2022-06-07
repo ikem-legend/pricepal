@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsEnum,
   IsISO8601,
+  IsNotEmpty,
   IsPhoneNumber,
   IsString,
   Matches,
@@ -12,8 +13,6 @@ import {
 import { UserStatus } from '../entities/user.entity';
 
 export class CreateUserDto {
-  @IsString()
-  @IsAlpha()
   @MinLength(3, {
     message:
       'First name is too short. Minimum length is $constraint1 characters, but actual length is $value',
@@ -22,10 +21,11 @@ export class CreateUserDto {
     message:
       'First name is too long. Maximum length is $constraint1 characters, but actual length is $value',
   })
-  readonly firstName: string;
-
   @IsString()
   @IsAlpha()
+  @IsNotEmpty()
+  readonly firstName: string;
+
   @MinLength(3, {
     message:
       'Last name is too short. Minimum length is $constraint1 characters, but actual length is $value',
@@ -34,9 +34,11 @@ export class CreateUserDto {
     message:
       'Last name is too long. Maximum length is $constraint1 characters, but actual length is $value',
   })
+  @IsString()
+  @IsAlpha()
+  @IsNotEmpty()
   readonly lastName: string;
 
-  @IsString()
   @Matches(/^[a-zA-Z]{3,}.*/, {
     message: 'Username must start with at least 3 alphabetic characters',
   })
@@ -48,15 +50,18 @@ export class CreateUserDto {
     message:
       'Username is too long. Maximum length is $constraint1 characters, but actual length is $value',
   })
+  @IsString()
+  @IsNotEmpty()
   readonly username: string;
 
-  @IsPhoneNumber('NG')
   @MinLength(11, {
     message: 'Phone number is too short',
   })
   @MaxLength(15, {
     message: 'Phone number is too long',
   })
+  @IsPhoneNumber('NG')
+  @IsNotEmpty()
   readonly phone: string;
 
   @IsEmail()
@@ -76,10 +81,12 @@ export class CreateUserDto {
   @IsISO8601()
   readonly dateOfBirth: Date;
 
-  @IsString()
   @MaxLength(30)
+  @IsString()
+  @IsNotEmpty()
   readonly location: string;
 
   @IsEnum(UserStatus)
+  @IsNotEmpty()
   readonly status: string;
 }
