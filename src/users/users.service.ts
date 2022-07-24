@@ -16,7 +16,7 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: number): Promise<User> {
     const user = this.usersRepository.findOne(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -51,7 +51,7 @@ export class UsersService {
     return 'Successfully edited user';
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const user = await this.findOne(id);
     await this.usersRepository.remove(user);
     return 'Successfully deleted user';

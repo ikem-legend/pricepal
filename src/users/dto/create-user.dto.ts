@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsISO8601,
   IsNotEmpty,
+  IsNumber,
   IsPhoneNumber,
   IsString,
   Matches,
@@ -89,4 +90,7 @@ export class CreateUserDto {
   @IsEnum(UserStatus)
   @IsNotEmpty()
   readonly status: string;
+
+  @IsNumber()
+  readonly roleID: number;
 }

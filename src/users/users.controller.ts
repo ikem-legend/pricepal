@@ -23,7 +23,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.findOne('' + id);
+    return this.userService.findOne(id);
   }
 
   @Post()
@@ -40,7 +40,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async delete(id: string): Promise<string> {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.userService.delete(id);
   }
 }
