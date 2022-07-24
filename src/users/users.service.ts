@@ -38,7 +38,6 @@ export class UsersService {
     return 'Successfully created user';
   }
 
-  // @todo Fix createdAt and updatedAt edit
   async edit(id: string, editUser: UpdateUserDto) {
     const user = await this.usersRepository.preload({
       id: +id,
