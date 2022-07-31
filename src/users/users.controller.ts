@@ -3,14 +3,15 @@ import {
   Controller,
   Delete,
   Get,
-  Post,
   Patch,
   Param,
   ParseIntPipe,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -21,14 +22,16 @@ export class UsersController {
     return this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
+
+  // @TODO: Update endpoint and logic for getting one user's profile
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
-  }
-
-  @Post()
-  async create(@Body() body: CreateUserDto): Promise<string> {
-    return this.userService.create(body);
   }
 
   @Patch(':id')

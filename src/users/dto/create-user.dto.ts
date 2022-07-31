@@ -8,7 +8,9 @@ import {
   IsPhoneNumber,
   IsString,
   Matches,
+  Max,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 import { UserStatus } from '../entities/user.entity';
@@ -90,6 +92,12 @@ export class CreateUserDto {
   @IsEnum(UserStatus)
   @IsNotEmpty()
   readonly status: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(100001)
+  @Max(999999)
+  readonly confirmationToken: number;
 
   @IsNumber()
   readonly roleID: number;
