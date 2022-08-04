@@ -40,7 +40,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly lastName: string;
 
-  @Matches(/^[a-zA-Z]{3,}.*/, {
+  @Matches(/^([a-zA-Z]{3,})|(([a-zA-Z]{3,})([-_])?([a-zA-Z])+)/, {
     message: 'Username must start with at least 3 alphabetic characters',
   })
   @MinLength(3, {
