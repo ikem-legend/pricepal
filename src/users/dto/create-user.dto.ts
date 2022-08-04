@@ -8,9 +8,7 @@ import {
   IsPhoneNumber,
   IsString,
   Matches,
-  Max,
   MaxLength,
-  Min,
   MinLength,
 } from 'class-validator';
 import { UserStatus } from '../entities/user.entity';
@@ -68,6 +66,7 @@ export class CreateUserDto {
   readonly phone: string;
 
   @IsEmail()
+  @IsNotEmpty()
   @MaxLength(254, {
     message:
       'Email is too long. Maximum length is $constraint1 characters, but actual length is $value',
@@ -75,6 +74,7 @@ export class CreateUserDto {
   readonly email: string;
 
   @IsString()
+  @IsNotEmpty()
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, {
     message:
       'Password must contain at least 1 lowercase, 1 uppercase, 1 number and 8 characters',
@@ -92,12 +92,6 @@ export class CreateUserDto {
   @IsEnum(UserStatus)
   @IsNotEmpty()
   readonly status: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @Min(100001)
-  @Max(999999)
-  readonly confirmationToken: number;
 
   @IsNumber()
   readonly roleID: number;

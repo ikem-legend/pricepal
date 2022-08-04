@@ -9,8 +9,9 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/entities/user.entity';
 import { generateConfirmationToken } from '../helpers/utils';
+import { LoginUserDto } from '../users/dto/login-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,18 +34,23 @@ export class AuthService {
     return result;
   }
 
-  async login(user: User) {
+  async login(user: LoginUserDto & { id: string }) {
     const payload = { username: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async register(user: User) {
+  async register(user: CreateUserDto) {
     const saltRounds = Number(this.configService.get('saltRounds', 10));
-    user.password = await hash(user.password, saltRounds);
-    user.confirmationToken = generateConfirmationToken();
-    const userExists = await this.userService.findOneByEmail(user.email);
+    const hashedPassword = await hash(user.password, saltRounds);
+    const confirmationToken = generateConfirmationToken();
+    const updatedUser = {
+      ...user,
+      password: hashedPassword,
+      confirmationToken,
+    };
+    const userExists = await this.userService.findOneByEmail(updatedUser.email);
     if (userExists) {
       throw new BadRequestException(
         'Error creating user',
@@ -52,7 +58,7 @@ export class AuthService {
       );
     } else {
       try {
-        await this.userService.create(user);
+        await this.userService.create(updatedUser);
         return 'Successfully created user';
       } catch (err) {
         throw new InternalServerErrorException(
