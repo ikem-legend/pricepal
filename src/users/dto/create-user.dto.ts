@@ -40,6 +40,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly lastName: string;
 
+  // TODO: Only allow certain characters in username
   @Matches(/^([a-zA-Z]{3,})|(([a-zA-Z]{3,})([-_])?([a-zA-Z])+)/, {
     message: 'Username must start with at least 3 alphabetic characters',
   })
@@ -55,6 +56,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly username: string;
 
+  // @TODO: Add phone number validation
   @MinLength(11, {
     message: 'Phone number is too short',
   })
