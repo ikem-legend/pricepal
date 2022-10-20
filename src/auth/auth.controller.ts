@@ -17,4 +17,7 @@ export class AuthController {
   async create(@Body() body: CreateUserDto): Promise<string> {
     return this.authService.register(body);
   }
+
+  // @TODO: Implement forgot password functionality
+  // @TODO: Implement change password functionality
 }
