@@ -5,7 +5,6 @@ import {
   IsISO8601,
   IsNotEmpty,
   IsNumber,
-  IsPhoneNumber,
   IsString,
   Matches,
   MaxLength,
@@ -56,14 +55,15 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly username: string;
 
-  // @TODO: Add phone number validation
   @MinLength(11, {
     message: 'Phone number is too short',
   })
   @MaxLength(15, {
     message: 'Phone number is too long',
   })
-  @IsPhoneNumber('NG')
+  @Matches(/((^\+)(234)[\d]{10})|((^234|0)[789][01][\d]{8})/, {
+    message: 'Phone number must match valid format',
+  })
   @IsNotEmpty()
   readonly phone: string;
 
