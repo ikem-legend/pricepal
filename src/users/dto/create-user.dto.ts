@@ -39,9 +39,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly lastName: string;
 
-  // TODO: Only allow certain characters in username
-  @Matches(/^([a-zA-Z]{3,})|(([a-zA-Z]{3,})([-_])?([a-zA-Z])+)/, {
-    message: 'Username must start with at least 3 alphabetic characters',
+  @Matches(/^[a-zA-Z]{3,}([-_][a-zA-Z]+)*$/, {
+    message:
+      'Username must start with at least 3 alphabetic characters and can have only hyphens or underscores as non-alphabetic characters',
   })
   @MinLength(3, {
     message:
