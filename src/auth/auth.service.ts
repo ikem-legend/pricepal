@@ -7,11 +7,13 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { compare, hash } from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { generateConfirmationToken } from '../helpers/utils';
 import { LoginUserDto } from '../users/dto/login-user.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UserCreatedEvent } from '../users/events/user-created.event';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,7 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -59,6 +62,11 @@ export class AuthService {
     } else {
       try {
         await this.userService.create(updatedUser);
+        const userCreatedEvent = new UserCreatedEvent();
+        userCreatedEvent.name = updatedUser.firstName;
+        userCreatedEvent.email = updatedUser.email;
+        userCreatedEvent.token = updatedUser.confirmationToken;
+        this.eventEmitter.emit('user.created', userCreatedEvent);
         return 'Successfully created user';
       } catch (err) {
         throw new InternalServerErrorException(
