@@ -8,6 +8,7 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { UserCreatedListener } from '../users/listeners/user-created.listener';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserCreatedListener } from '../users/listeners/user-created.listener';
         signOptions: { expiresIn: '1h' },
       }),
     }),
+    MailModule,
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, UserCreatedListener],
   exports: [AuthService],

@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import appConfig from './config/app.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -29,9 +30,10 @@ import { AuthModule } from './auth/auth.module';
         synchronize: true,
       }),
     }),
+    EventEmitterModule.forRoot(),
     UsersModule,
     AuthModule,
-    EventEmitterModule.forRoot(),
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
