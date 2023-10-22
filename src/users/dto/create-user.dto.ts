@@ -4,7 +4,7 @@ import {
   IsEnum,
   IsISO8601,
   IsNotEmpty,
-  IsPhoneNumber,
+  IsNumber,
   IsString,
   Matches,
   MaxLength,
@@ -39,8 +39,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly lastName: string;
 
-  @Matches(/^[a-zA-Z]{3,}.*/, {
-    message: 'Username must start with at least 3 alphabetic characters',
+  @Matches(/^[a-zA-Z]{3,}([-_][a-zA-Z]+)*$/, {
+    message:
+      'Username must start with at least 3 alphabetic characters and can have only hyphens or underscores as non-alphabetic characters',
   })
   @MinLength(3, {
     message:
@@ -60,11 +61,14 @@ export class CreateUserDto {
   @MaxLength(15, {
     message: 'Phone number is too long',
   })
-  @IsPhoneNumber('NG')
+  @Matches(/((^\+)(234)[\d]{10})|((^234|0)[789][01][\d]{8})/, {
+    message: 'Phone number must match valid format',
+  })
   @IsNotEmpty()
   readonly phone: string;
 
   @IsEmail()
+  @IsNotEmpty()
   @MaxLength(254, {
     message:
       'Email is too long. Maximum length is $constraint1 characters, but actual length is $value',
@@ -72,6 +76,7 @@ export class CreateUserDto {
   readonly email: string;
 
   @IsString()
+  @IsNotEmpty()
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, {
     message:
       'Password must contain at least 1 lowercase, 1 uppercase, 1 number and 8 characters',
@@ -89,4 +94,7 @@ export class CreateUserDto {
   @IsEnum(UserStatus)
   @IsNotEmpty()
   readonly status: string;
+
+  @IsNumber()
+  readonly roleID: number;
 }

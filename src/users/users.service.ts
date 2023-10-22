@@ -16,21 +16,23 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: string): Promise<User> {
-    const user = this.usersRepository.findOne(id);
+  async findOne(id: number): Promise<User> {
+    const user = await this.usersRepository.findOne(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
   }
 
-  async create(user: CreateUserDto) {
-    const newUser = await this.usersRepository.create(user);
-    await this.usersRepository.save(newUser);
-    return 'Successfully created user';
+  async findOneByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOne({ where: { email } });
   }
 
-  // @todo Fix createdAt and updatedAt edit
+  async create(user: CreateUserDto) {
+    const newUser = await this.usersRepository.create(user);
+    return this.usersRepository.save(newUser);
+  }
+
   async edit(id: string, editUser: UpdateUserDto) {
     const user = await this.usersRepository.preload({
       id: +id,
@@ -43,7 +45,7 @@ export class UsersService {
     return 'Successfully edited user';
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const user = await this.findOne(id);
     await this.usersRepository.remove(user);
     return 'Successfully deleted user';
